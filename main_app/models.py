@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
 
 MEALS = (
     ('B', 'Breakfast'),
@@ -7,12 +8,26 @@ MEALS = (
     ('D', 'Dinner')
 )
 
-# Create your models here.
+
+class PeopleToEat(models.Model):
+  name = models.CharField(max_length=50)
+  reason = models.CharField(max_length=100)
+  flavor = models.CharField(max_length=50)
+  class Meta:
+        verbose_name = "Person to Eat"
+        verbose_name_plural = "People to Eat"
+  
+  def __str__(self):
+    return self.name
+
+
 class Dino(models.Model):
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100)
     description = models.TextField()
     age = models.IntegerField()
+    people = models.ManyToManyField(PeopleToEat)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.name
@@ -35,3 +50,6 @@ class Feeding(models.Model):
 
   class Meta:
     ordering = ['-date']
+    
+    
+    
